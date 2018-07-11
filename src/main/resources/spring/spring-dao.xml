@@ -6,7 +6,8 @@
  http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
     <!-- 配置整合mybatis过程 -->
 
-    <!-- 1.配置数据库相关参数propeties的属性：&{url}-->
+    <!-- 1.配置数据库相关参数propeties的属性：&{url} -->
+    <!-- context扫描 -->
     <context:property-placeholder location="classpath:jdbc.properties"/>
 
     <!-- 2.数据库的链接池-->
@@ -23,7 +24,7 @@
         <!-- 关闭连接后不自动commit-->
         <property name="autoCommitOnClose" value="false"/>
         <!-- 获取连接超时时间-->
-        <property name="checkoutTimeout" value="1000"/>
+        <property name="checkoutTimeout" value="2000"/>
         <!-- 获取连接失败重试次数-->
         <property name="acquireRetryAttempts" value="2"/>
     </bean>
