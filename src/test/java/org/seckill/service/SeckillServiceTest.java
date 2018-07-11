@@ -5,6 +5,8 @@ import org.junit.runner.RunWith;
 import org.seckill.dto.Exposer;
 import org.seckill.dto.SeckillExecution;
 import org.seckill.entity.Seckill;
+import org.seckill.exception.RepeatKillException;
+import org.seckill.exception.SeckillCloseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,34 +42,26 @@ public class SeckillServiceTest {
 		logger.info("seckill={}", seckill);
 	}
 
+	//集成测试代码完整逻辑、注意可重复执行
 	@Test
-	public void exportSeckillUrl() {
+	public void testSeckillLogic() throws Exception{
 		long id = 1002;
 		Exposer exposer = seckillService.exportSeckillUrl(id);
-		logger.info("exposer={}", exposer);
-		/**
-		 * exposer=Exposer{exposed=true, md5='b8e534f983458e9e603751ad99ed6a29', seckillId=1002, now=0, start=0, end=0}
-		 */
-	}
-
-	@Test
-	public void executeSeckill() {
-		long id = 1002;
-		long phone = 13843270564L;
-		String md5 = "b8e534f983458e9e603751ad99ed6a29";
-		SeckillExecution execution = seckillService.executeSeckill(id, phone, md5);
-		logger.info("result={}", execution);
-		/**
-		 * result=
-		 * SeckillExecution{
-		 * seckillId=1002,
-		 * state=1,
-		 * stateInfo='秒杀成功',
-		 * successKilled=SuccessKilled{
-		 *      seckillId=1002,
-		 *      userPhone=13843270564,
-		 *      state=0,
-		 *      createTime=null}}
-		 */
+		if(exposer.isExposed()){
+			logger.info("exposer={}", exposer);
+			long phone = 13843270564L;
+			String md5 = exposer.getMd5();
+			try{
+				SeckillExecution execution = seckillService.executeSeckill(id, phone, md5);
+				logger.info("result={}", execution);
+			}catch(RepeatKillException e){
+				logger.error(e.getMessage());
+			}catch(SeckillCloseException e){
+				logger.error(e.getMessage());
+			}
+		}else{
+			//秒杀未开启
+			logger.warn("exposer={}", exposer);
+		}
 	}
 }
