@@ -8,7 +8,7 @@
 
     <!-- 1.配置数据库相关参数propeties的属性：&{url} -->
     <!-- context扫描 -->
-    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true"/>
 
     <!-- 2.数据库的链接池-->
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
