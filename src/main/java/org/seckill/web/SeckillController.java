@@ -36,27 +36,29 @@ public class SeckillController {
 		List<Seckill> list = seckillService.getSeckillList();
 		model.addAttribute("list", list);
 		//list.jsp + model = ModelAndView
-		return "list";// /WEB-INF/jsp/"list".jsp
+		return "list";
 	}
 
 	@RequestMapping(value = "/{seckillId}/detail", method = RequestMethod.GET)
-	public String detail(@PathVariable("seckillId") Long seckillId, Model model) {
-		if (seckillId == null) {
+	public String detail(@PathVariable("seckillId")Long seckillId, Model model) {
+		if(seckillId == null) {
 			return "redirect:/seckill/list";
 		}
 		Seckill seckill = seckillService.getById(seckillId);
-		if (seckill == null) {
+		if(seckill == null) {
 			return "forward:/seckill/list";
 		}
+
 		model.addAttribute("seckill", seckill);
 		return "detail";
+
 	}
 
 	@RequestMapping(value = "/{seckillId}/exposer",
 			method = RequestMethod.POST,
 			produces = {"application/json;charset=UTF-8"})
 	@ResponseBody
-	public SeckillResult<Exposer> exposer(Long seckillId) {
+	public SeckillResult<Exposer> exposer(@PathVariable Long seckillId) {
 		SeckillResult<Exposer> result;
 		try {
 			Exposer exposer = seckillService.exportSeckillUrl(seckillId);
@@ -68,7 +70,7 @@ public class SeckillController {
 		return result;
 	}
 
-	@RequestMapping(value = "/{seckillId}/{md5}/execytion",
+	@RequestMapping(value = "/{seckillId}/{md5}/execution",
 			method = RequestMethod.POST,
 			produces = {"application/json;charset=UTF8"})
 	@ResponseBody
@@ -97,8 +99,9 @@ public class SeckillController {
 	}
 
 	@RequestMapping(value = "/time/now", method = RequestMethod.GET)
+	@ResponseBody
 	public SeckillResult<Long> time(){
 		Date now = new Date();
-		return new SeckillResult(true, now.getTime());
+		return new SeckillResult<Long>(true, now.getTime());
 	}
 }

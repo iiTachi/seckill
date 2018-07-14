@@ -2,6 +2,7 @@ package org.seckill.entity;
 
 import java.util.Date;
 public class Seckill {
+
 	private long seckillId;
 
 	private String name;
@@ -14,14 +15,13 @@ public class Seckill {
 
 	private Date createTime;
 
-	public long getSeckill() {
+	public long getSeckillId() {
 		return seckillId;
 	}
 
-	public void setSeckill(long seckill) {
-		this.seckillId = seckill;
+	public void setSeckillId(long seckillId) {
+		this.seckillId = seckillId;
 	}
-
 	public String getName() {
 		return name;
 	}
@@ -65,7 +65,7 @@ public class Seckill {
 	@Override
 	public String toString() {
 		return "Seckill{" +
-				"seckill=" + seckillId +
+				"seckillId=" + seckillId +
 				", name='" + name + '\'' +
 				", number=" + number +
 				", startTime=" + startTime +

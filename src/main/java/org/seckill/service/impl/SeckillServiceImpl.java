@@ -35,7 +35,7 @@ public class SeckillServiceImpl implements SeckillService {
 	private SuccessKilledDao successKilledDao;
 
 	//随机生成的混淆
-	private final String salt = "skjadfhsfdaagadg$&*(@!v";
+	private final String salt = "aaaaaaaaa";
 	public List<Seckill> getSeckillList() {
 		return seckillDao.queryAll(0, 4);
 	}
@@ -64,8 +64,7 @@ public class SeckillServiceImpl implements SeckillService {
 
 	private String getMD5(long seckillId){
 		String base = seckillId + "/" + salt;
-		String md5 = DigestUtils.md5DigestAsHex(base.getBytes());
-		return md5;
+		return DigestUtils.md5DigestAsHex(base.getBytes());
 	}
 
 	@Transactional
