@@ -14,8 +14,18 @@ var seckill = {
             return '/seckill/' + seckillId + '/' + md5 + '/execution';
         }
     },
+
+    //验证手机号
+    validatePhone: function (phone) {
+        if (phone && phone.length == 11 && !isNaN(phone)) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    //处理秒杀逻辑
     handleSeckill: function (seckillId, node) {
-        //处理秒杀逻辑
         node.hide().html('<button class="btn btn-primary btn-lg" id="killBtn">开始秒杀</button>');
         $.post(seckill.URL.exposer(seckillId),{},function(result){
             //回调函数中的交互
@@ -33,6 +43,7 @@ var seckill = {
                         $(this).addClass('disabled');
                         //发送请求执行秒杀
                         $.post(killUrl,{},function(result){
+                            console.log(result);//TODO
                             if(result && result['success']){
                                 var killResult = result['data'];
                                 var state = killResult['state'];
@@ -52,21 +63,14 @@ var seckill = {
                     seckill.countdown(seckillId, now, start, end);
                 }
             }else {
-                console.log('result:' + result);//TODO
+                console.log('exposer:' + result);//TODO
             }
         });
     },
-    //验证手机号
-    validatePhone: function (phone) {
-        if (phone && phone.length == 11 && !isNaN(phone)) {
-            return true;
-        } else {
-            return false;
-        }
-    },
+
     //时间判断
     countdown: function (seckillId, nowTime, startTime, endTime) {
-        var seckillBox = $(' #seckill-box');
+        var seckillBox = $('#seckill-box');
         if (nowTime > endTime) {
             //秒杀结束
             seckillBox.html('秒杀结束');
@@ -100,7 +104,8 @@ var seckill = {
             if (!seckill.validatePhone(killPhone)) {
                 //绑定phone
                 //控制输出
-                var killPhoneModal = $(' #killPhoneModel');
+                var killPhoneModal = $('#killPhoneModal');
+                //显示弹出层
                 killPhoneModal.modal({
                     show: true,//显示弹出层
                     backdrop: 'static',//禁止位置关闭

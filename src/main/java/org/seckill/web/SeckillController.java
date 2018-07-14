@@ -40,12 +40,12 @@ public class SeckillController {
 	}
 
 	@RequestMapping(value = "/{seckillId}/detail", method = RequestMethod.GET)
-	public String detail(@PathVariable("seckillId")Long seckillId, Model model) {
-		if(seckillId == null) {
+	public String detail(@PathVariable("seckillId") Long seckillId, Model model) {
+		if (seckillId == null) {
 			return "redirect:/seckill/list";
 		}
 		Seckill seckill = seckillService.getById(seckillId);
-		if(seckill == null) {
+		if (seckill == null) {
 			return "forward:/seckill/list";
 		}
 
@@ -70,6 +70,8 @@ public class SeckillController {
 		return result;
 	}
 
+	//debug删除了MD5
+
 	@RequestMapping(value = "/{seckillId}/{md5}/execution",
 			method = RequestMethod.POST,
 			produces = {"application/json;charset=UTF8"})
@@ -78,20 +80,20 @@ public class SeckillController {
 	                                               @PathVariable("md5") String md5,
 	                                               @CookieValue(value = "killPhone", required = false) Long phone) {
 		//也可以使用springmvc valid
-		if (phone == null){
+		if (phone == null) {
 			return new SeckillResult<SeckillExecution>(false, "未注册");
 		}
 		SeckillResult<SeckillExecution> result;
-		try{
+		try {
 			SeckillExecution execution = seckillService.executeSeckill(seckillId, phone, md5);
 			return new SeckillResult<SeckillExecution>(true, execution);
-		} catch(RepeatKillException e1){
+		} catch (RepeatKillException e1) {
 			SeckillExecution execution = new SeckillExecution(seckillId, SeckillStatEnum.REPEAT_KILL);
 			return new SeckillResult<SeckillExecution>(false, execution);
-		} catch (SeckillCloseException e2){
+		} catch (SeckillCloseException e2) {
 			SeckillExecution execution = new SeckillExecution(seckillId, SeckillStatEnum.END);
 			return new SeckillResult<SeckillExecution>(false, execution);
-		} catch (Exception e){
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			SeckillExecution execution = new SeckillExecution(seckillId, SeckillStatEnum.INNER_ERROR);
 			return new SeckillResult<SeckillExecution>(false, execution);
@@ -100,7 +102,7 @@ public class SeckillController {
 
 	@RequestMapping(value = "/time/now", method = RequestMethod.GET)
 	@ResponseBody
-	public SeckillResult<Long> time(){
+	public SeckillResult<Long> time() {
 		Date now = new Date();
 		return new SeckillResult<Long>(true, now.getTime());
 	}
